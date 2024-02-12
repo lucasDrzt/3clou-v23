@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+
+# Mise à jour des paquets et installation des dépendances nécessaires
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y apache2 mariadb-server php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath
+
+# Configurer et démarrer Apache
+sudo systemctl start apache2
+sudo systemctl enable apache2
+
+# Configurer et démarrer MariaDB
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+
+# Sécurisation de MariaDB (à faire manuellement)
+# sudo mysql_secure_installation
+
+# Création d'une base de données et d'un utilisateur pour Drupal
+sudo mysql -e "CREATE DATABASE drupalDB;"
+sudo mysql -e "CREATE USER 'drupalUser'@'localhost' IDENTIFIED BY 'drupalPass';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON drupalDB.* TO 'drupalUser'@'localhost';"
+sudo mysql -e "FLUSH PRIVILEGES;"
+
+# Configuration de PHP
+phpinifile=$(php -r "echo php_ini_loaded_file();")
+sudo sed -i 's/memory_limit = .*/memory_limit = 256M/' $phpinifile
+sudo sed -i 's/upload_max_filesize = .*/upload_max_filesize = 64M/' $phpinifile
+sudo sed -i 's/post_max_size = .*/post_max_size = 64M/' $phpinifile
+sudo sed -i 's/max_execution_time = .*/max_execution_time = 240/' $phpinifile
+sudo sed -i 's/;max_input_vars = .*/max_input_vars = 3000/' $phpinifile
+
+# Téléchargement et installation de Drupal
+cd /var/www/html
+sudo wget https://www.drupal.org/download-latest/tar.gz -O drupal.tar.gz
+sudo tar -xzvf drupal.tar.gz
+sudo mv drupal-* drupal
+sudo chown -R www-data:www-data drupal
+sudo find drupal -type d -exec chmod 755 {} \;
+sudo find drupal -type f -exec chmod 644 {} \;
+cd /etc/nginx/sites-available/ 
+
+nom_domaine=$(curl -4 ifconfig.me)
+
+echo 'server {
+    listen 80;
+    server_name '"$nom_domaine"';
+
+    root /var/www/html/drupal;
+    index index.php index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+         include snippets/fastcgi-php.conf;
+         fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+         include fastcgi_params;
+         fastcgi_intercept_errors on;
+    }
+
+    error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log combined;
+}' > "drupal.conf"
+
+sudo ln -s /etc/nginx/sites-available/drupal.conf /etc/nginx/sites-enabled/
+sudo cp drupal.conf ../conf.d/
+sudo systemctl restart nginx
+
+
+# Redémarrage d'Apache pour appliquer les changements
+sudo systemctl restart apache2
+
+echo "Installation de Drupal terminée. Veuillez finaliser la configuration via l'interface web."

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+if (( $# < 1 ))
+then
+   echo "Usage : $0 instance_id"
+   echo "List of current instances :"
+   scw instance server list
+   exit 1
+fi
+
+instanceid=$1
+
+public_ip=$( scw instance server get $instanceid | \
+             grep -A 2 'Public IPs:' | tail -n 1 | \
+             awk '{print $2}' )
+
+ssh -q \
+    -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    root@${public_ip}
+

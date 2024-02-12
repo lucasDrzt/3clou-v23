@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+
+# Supprime toutes les instances dont le
+# nom contient une certaine chaîne
+
+if (( $# < 1 ))
+then 
+   echo "Usage: $0 mot_clé"
+   scw instance server list
+   exit 1
+fi
+
+motcle=$1
+
+echo "SUPPRESSION des instances :"
+scw instance server list | grep -- $motcle | awk '{ print $1,$2 }'
+
+read -p "GO ? " ans
+
+if [[ "$ans" != "Y" && "$ans" != "y" && "$ans" != "o" && "$ans" != "O" ]]
+then
+   echo "Abandon."
+   exit 2
+fi
+
+for id in $( scw instance server list | grep -- $motcle | cut -d' ' -f1 | grep -v '^ID' )
+do
+   scw instance server stop $id
+done
+
+for id in $( scw instance server list | grep -- $motcle | cut -d' ' -f1 | grep -v '^ID' )
+do
+   scw instance server wait $id > /dev/null 2>&1
+   echo "Deleting server $id."
+   scw instance server delete $id
+done
+

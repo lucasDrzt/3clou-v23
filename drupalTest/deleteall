@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+
+# Supprime toutes les instances 
+
+for id in $( scw instance server list | cut -d' ' -f1 | grep -v '^ID' )
+do
+   scw instance server stop $id
+done
+
+
+for id in $( scw instance server list | cut -d' ' -f1 | grep -v '^ID' )
+do
+   scw instance server wait $id > /dev/null 2>&1
+   echo "Deleting server $id"
+   scw instance server delete $id
+done
+

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Vérification des arguments
+if (( $# < 1 ))
+then
+    echo "Usage: $0 nom_serveur_base_de_donnees"
+    exit 1
+fi
+
+# Création de l'instance de base de données
+scw instance server create \
+    name=$1 type=PRO2-XXS zone=fr-par-1 \
+    image=debian_bookworm \
+    cloud-init=@/home/lucas/cloud/drupalTest/install_database
+
+echo "Déploiement de la base de données lancé..."
+echo "Utilisez './go id_instance' pour accéder à l'instance après son lancement."

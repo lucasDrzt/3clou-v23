@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+if (( $# < 1 ))
+then
+    echo "Usage: $0 nom_serveur"
+    exit 1
+fi
+
+
+scw instance server create \
+    name=$1 type=PRO2-XXS zone=fr-par-1 \
+    image=debian_bookworm \
+    cloud-init=@/home/lucas/cloud/drupalTest/install_drupal_backend2 
+
+echo "Déploiement de l'instance web Drupal lancé..."
+echo "Utilisez 'scw instance server list' pour vérifier le statut de l'instance."
