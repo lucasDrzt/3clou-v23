@@ -2,7 +2,7 @@ Voici comment procéder au déploiement avec un VPC :
 
 Il faut copier le fichier VPC et mettre les droits d'exécution avec :
 
-chmod +x ./nom_du_fichier
+`chmod +x ./nom_du_fichier`
 
 sur le fichier mk_sshconf.
 
