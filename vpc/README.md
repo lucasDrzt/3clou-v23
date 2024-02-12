@@ -9,7 +9,7 @@ sur le fichier "mk_sshconf"
 puis faire les commandes suivante :
 
 `
-make init
-make plan
+make init \n
+make plan \n
 make apply
 `
