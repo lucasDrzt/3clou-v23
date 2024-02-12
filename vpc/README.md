@@ -16,3 +16,5 @@ make apply
 et pour suprimer le déploiment :
 
 `make destroy`
+
+Une fois  cela fait récupérer l'IP attribuer au loadbalencer et conecter vous decu via une interface web
