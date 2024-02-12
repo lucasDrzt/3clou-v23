@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if (( $# < 1 ))
+then
+  echo "Usage: $0 srvname"
+  exit 1
+fi
+
+srvip=$( tofu output -json | jq ".${1}_private_ip.value" | jq -s -r '.[0]' )
+echo "IP : $srvip"
+
+#ssh -i ../ssh-keys/id_rsa_tfkeypair1 \
+ssh -o StrictHostKeyChecking=no \
+    -o UserKnownHostsFile=/dev/null \
+    -F ./ssh_config \
+    root@${srvip}
+    #root@$(cat teamname.txt)-${srvname}.myvpc
