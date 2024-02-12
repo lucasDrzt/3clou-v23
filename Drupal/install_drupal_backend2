@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Mise à jour des paquets et installation des dépendances nécessaires
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y apache2 php php-cli php-fpm php-json php-common php-mysql php-zip php-gd php-mbstring php-curl php-xml php-pear php-bcmath
+
+# Configurer et démarrer Apache
+sudo systemctl start apache2
+sudo systemctl enable apache2
+
+# Configuration de PHP
+phpinifile=$(php -r "echo php_ini_loaded_file();")
+sudo sed -i 's/memory_limit = .*/memory_limit = 256M/' $phpinifile
+sudo sed -i 's/upload_max_filesize = .*/upload_max_filesize = 64M/' $phpinifile
+sudo sed -i 's/post_max_size = .*/post_max_size = 64M/' $phpinifile
+sudo sed -i 's/max_execution_time = .*/max_execution_time = 240/' $phpinifile
+sudo sed -i 's/;max_input_vars = .*/max_input_vars = 3000/' $phpinifile
+
+# Téléchargement et installation de Drupal
+cd /var/www/html
+sudo wget https://www.drupal.org/download-latest/tar.gz -O drupal2.tar.gz
+sudo tar -xzvf drupal2.tar.gz
+sudo mv drupal-* drupal2
+sudo chown -R www-data:www-data drupal2
+sudo find drupal2 -type d -exec chmod 755 {} \;
+sudo find drupal2 -type f -exec chmod 644 {} \;
+
+# Redémarrage d'Apache pour appliquer les changements
+sudo systemctl restart apache2
+
+echo "Installation de Drupal terminée. Veuillez finaliser la configuration via l'interface web."

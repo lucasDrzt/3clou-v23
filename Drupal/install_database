@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+sudo apt update && sudo apt upgrade -y
+
+sudo apt install -y mariadb-server
+
+sudo systemctl start mariadb
+sudo systemctl enable mariadb
+
+Création des bases de données et des utilisateurs pour les deux sites Drupal
+sudo mysql -e "CREATE DATABASE drupalDB1;"
+sudo mysql -e "CREATE DATABASE drupalDB2;"
+sudo mysql -e "CREATE USER 'drupalUser1'@'localhost' IDENTIFIED BY 'drupalPass1';"
+sudo mysql -e "CREATE USER 'drupalUser2'@'localhost' IDENTIFIED BY 'drupalPass2';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON drupalDB1.* TO 'drupalUser1'@'localhost';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON drupalDB2.* TO 'drupalUser2'@'localhost';"
+sudo mysql -e "FLUSH PRIVILEGES;"
+
