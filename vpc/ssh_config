@@ -1,0 +1,7 @@
+# scaleway_vpc_public_gateway_ip.pgw_ip.address
+Host *
+  #ProxyJump bastion@51.158.116.161:61000
+  ProxyCommand=ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p  -p 61000 bastion@51.158.116.161
+
+  StrictHostKeyChecking=no
+  UserKnownHostsFile=/dev/null

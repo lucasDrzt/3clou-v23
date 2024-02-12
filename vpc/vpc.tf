@@ -43,25 +43,25 @@ resource scaleway_vpc_gateway_network "mygw" {
 
 # PAT rules
 
-#resource "scaleway_vpc_public_gateway_pat_rule" "http" {
-#  gateway_id = scaleway_vpc_public_gateway.pgw.id
-#  #private_ip = scaleway_vpc_public_gateway_dhcp.dhcp.address
-#  private_ip = "192.168.42.11"
-#  private_port = 80
-#  public_port = 80
-#  protocol = "tcp"
-#  depends_on = [scaleway_vpc_gateway_network.mygw, scaleway_vpc_private_network.myvpc]
-#}
-#
-#resource "scaleway_vpc_public_gateway_pat_rule" "https" {
-#  gateway_id = scaleway_vpc_public_gateway.pgw.id
-#  #private_ip = scaleway_vpc_public_gateway_dhcp.dhcp.address
-#  private_ip = "192.168.42.11" 
-#  private_port = 443
-#  public_port = 443
-#  protocol = "tcp"
-#  depends_on = [scaleway_vpc_gateway_network.mygw, scaleway_vpc_private_network.myvpc]
-#}
+resource "scaleway_vpc_public_gateway_pat_rule" "http" {
+  gateway_id = scaleway_vpc_public_gateway.pgw.id
+#  private_ip = scaleway_vpc_public_gateway_dhcp.dhcp.address
+  private_ip = "192.168.42.11"
+  private_port = 80
+  public_port = 80
+  protocol = "tcp"
+  depends_on = [scaleway_vpc_gateway_network.mygw, scaleway_vpc_private_network.myvpc]
+}
+
+resource "scaleway_vpc_public_gateway_pat_rule" "https" {
+  gateway_id = scaleway_vpc_public_gateway.pgw.id
+#  private_ip = scaleway_vpc_public_gateway_dhcp.dhcp.address
+  private_ip = "192.168.42.11" 
+  private_port = 443
+  public_port = 443
+  protocol = "tcp"
+  depends_on = [scaleway_vpc_gateway_network.mygw, scaleway_vpc_private_network.myvpc]
+}
 
 # Output
 # scaleway_vpc_public_gateway_ip.pgw_ip.address
