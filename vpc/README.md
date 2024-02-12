@@ -8,8 +8,8 @@ sur le fichier "mk_sshconf"
 
 puis faire les commandes suivante :
 
-`
-make init `
-`make plan `
-`make apply
-`
+```
+make init 
+make plan 
+make apply
+```
