@@ -1,12 +1,12 @@
-Voici comment faire le déploiment avec un VPC 
+Voici comment procéder au déploiement avec un VPC :
 
-il faut copier le fichier vpc mettre les droits d'exécution avec :
+Il faut copier le fichier VPC et mettre les droits d'exécution avec :
 
-`chmod +x ./nom_du_fichier`
+chmod +x ./nom_du_fichier
 
-sur le fichier "mk_sshconf" 
+sur le fichier mk_sshconf.
 
-puis faire les commandes suivante :
+Puis exécuter les commandes suivantes :
 
 ```
 make init 
@@ -17,4 +17,4 @@ et pour suprimer le déploiment :
 
 `make destroy`
 
-Une fois  cela fait récupérer l'IP attribuer au loadbalencer et conecter vous decu via une interface web
+Une fois cela fait, récupérez l'IP attribuée au load balancer et connectez-vous dessus via une interface web
