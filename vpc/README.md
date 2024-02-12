@@ -13,3 +13,6 @@ make init
 make plan 
 make apply
 ```
+et pour suprimer le déploiment :
+
+`make destroy`
